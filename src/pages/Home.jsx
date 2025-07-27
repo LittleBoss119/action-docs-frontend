@@ -39,7 +39,7 @@ const Home = () => {
     if (!confirmed) return;
 
     try {
-      await fetch(`http://localhost:4000/api/actions/${id}`, { method: "DELETE" });
+      await fetch(`https://api-docs-backend-production.up.railway.app/api/actions/${id}`, { method: "DELETE" });
       setActions((prev) => prev.filter((a) => a.id !== id));
       setSelected(null);
       showToast("Action berhasil dihapus.");
@@ -51,7 +51,7 @@ const Home = () => {
   const handleSaveAction = async (data) => {
     try {
       if (editing) {
-        await fetch(`http://localhost:4000/api/actions/${editing.id}`, {
+        await fetch(`https://api-docs-backend-production.up.railway.app/api/actions/${editing.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
@@ -60,7 +60,7 @@ const Home = () => {
         setSelected((prev) => (prev?.id === editing.id ? { ...editing, ...data } : prev));
         showToast("Action berhasil diperbarui.");
       } else {
-        const res = await fetch("http://localhost:4000/api/actions", {
+        const res = await fetch("https://api-docs-backend-production.up.railway.app/api/actions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
