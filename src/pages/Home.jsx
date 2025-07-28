@@ -94,7 +94,7 @@ const Home = () => {
           </div>
 
           {/* Scrollable List */}
-          <div className="overflow-y-auto pr-2">
+          <div className="overflow-y-auto pr-2 pb-7">
             <ActionList
               actions={filteredActions}
               onSelect={setSelected}
