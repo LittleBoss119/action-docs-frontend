@@ -6,9 +6,6 @@ import ActionDetail from "../components/action/ActionDetail";
 import ActionFormModal from "../components/action/ActionFormModal";
 
 const API_URL = "https://api-docs-backend-production.up.railway.app/api/actions";
-const AUTH_HEADER = {
-  Authorization: "Bearer supersecretkey123",
-};
 
 const Home = () => {
   const [search, setSearch] = useState("");
@@ -19,7 +16,7 @@ const Home = () => {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    fetch(API_URL, { headers: AUTH_HEADER })
+    fetch(API_URL)
       .then((res) => res.json())
       .then(setActions)
       .catch((err) => console.error("Gagal memuat actions:", err));
@@ -48,7 +45,6 @@ const Home = () => {
     try {
       await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
-        headers: AUTH_HEADER,
       });
       setActions((prev) => prev.filter((a) => a.id !== id));
       setSelected(null);
@@ -65,7 +61,6 @@ const Home = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            ...AUTH_HEADER,
           },
           body: JSON.stringify(data),
         });
@@ -81,7 +76,6 @@ const Home = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...AUTH_HEADER,
           },
           body: JSON.stringify(data),
         });
