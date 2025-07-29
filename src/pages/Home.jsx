@@ -5,6 +5,11 @@ import ActionList from "../components/action/ActionList";
 import ActionDetail from "../components/action/ActionDetail";
 import ActionFormModal from "../components/action/ActionFormModal";
 
+const API_URL = "https://api-docs-backend-production.up.railway.app/api/actions";
+const AUTH_HEADER = {
+  Authorization: "Bearer supersecretkey123",
+};
+
 const Home = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -14,7 +19,7 @@ const Home = () => {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    fetch("https://api-docs-backend-production.up.railway.app/api/actions")
+    fetch(API_URL, { headers: AUTH_HEADER })
       .then((res) => res.json())
       .then(setActions)
       .catch((err) => console.error("Gagal memuat actions:", err));
@@ -26,7 +31,9 @@ const Home = () => {
   };
 
   const filteredActions = actions.filter((a) =>
-    `${a.name} ${a.description} ${a.domain} ${a.keyword?.join(" ")}`.toLowerCase().includes(search.toLowerCase())
+    `${a.name} ${a.description} ${a.domain} ${a.keyword?.join(" ")}`
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   const handleEdit = (action) => {
@@ -39,7 +46,10 @@ const Home = () => {
     if (!confirmed) return;
 
     try {
-      await fetch(`https://api-docs-backend-production.up.railway.app/api/actions/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: AUTH_HEADER,
+      });
       setActions((prev) => prev.filter((a) => a.id !== id));
       setSelected(null);
       showToast("Action berhasil dihapus.");
@@ -51,18 +61,28 @@ const Home = () => {
   const handleSaveAction = async (data) => {
     try {
       if (editing) {
-        await fetch(`https://api-docs-backend-production.up.railway.app/api/actions/${editing.id}`, {
+        await fetch(`${API_URL}/${editing.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...AUTH_HEADER,
+          },
           body: JSON.stringify(data),
         });
-        setActions((prev) => prev.map((a) => (a.id === editing.id ? { ...editing, ...data } : a)));
-        setSelected((prev) => (prev?.id === editing.id ? { ...editing, ...data } : prev));
+        setActions((prev) =>
+          prev.map((a) => (a.id === editing.id ? { ...editing, ...data } : a))
+        );
+        setSelected((prev) =>
+          prev?.id === editing.id ? { ...editing, ...data } : prev
+        );
         showToast("Action berhasil diperbarui.");
       } else {
-        const res = await fetch("https://api-docs-backend-production.up.railway.app/api/actions", {
+        const res = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...AUTH_HEADER,
+          },
           body: JSON.stringify(data),
         });
         const newAction = await res.json();
