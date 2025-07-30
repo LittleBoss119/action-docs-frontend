@@ -14,7 +14,7 @@ const Header = () => {
               Action Documentation
             </h1>
             <p className="text-xs text-gray-300">
-              Internal API Reference — Telekom Indonesia
+              Internal API Reference — Telkom Indonesia
             </p>
           </div>
         </div>
